@@ -1,36 +1,14 @@
 import React, { useState } from 'react';
 import { Card, Input, Select, Tag, Row, Col, Empty } from 'antd';
-// import { SearchOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 
 const Home = () => {
-  // Mock data - replace with your actual data source
-  const [posts, setPosts] = useState([
-    {
-      id: 1,
-      title: 'Math Competition Results',
-      content: 'The annual math competition results will be announced on Friday in the auditorium.',
-      category: 'Academic',
-      priority: 'normal',
-      date: '2024-03-15T09:00:00'
-    },
-    {
-      id: 2,
-      title: 'Sports Day Postponed',
-      content: 'Due to weather conditions, sports day has been rescheduled to next week.',
-      category: 'Sports',
-      priority: 'urgent',
-      date: '2024-03-14T15:30:00'
-    },
-    {
-      id: 3,
-      title: 'Art Club Exhibition',
-      content: 'Visit our annual art exhibition in the school gallery this Wednesday.',
-      category: 'Clubs',
-      priority: 'normal',
-      date: '2024-03-13T11:45:00'
-    }
+  // Simplified dummy data
+  const [posts] = useState([
+    { id: 1, title: 'Event Update', content: 'School event rescheduled to next Friday', category: 'Events', priority: 'normal', date: '2024-03-15' },
+    { id: 2, title: 'URGENT: System Maintenance', content: 'Portal will be offline tonight 10PM-12AM', category: 'General', priority: 'urgent', date: '2024-03-14' },
+    { id: 3, title: 'New Course Available', content: 'Introduction to AI starting next month', category: 'Academic', priority: 'normal', date: '2024-03-13' },
   ]);
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -47,35 +25,31 @@ const Home = () => {
   });
 
   return (
-    <div className="p-4">
-      {/* Search and Filter Section */}
-      <div className="mb-6">
-        {/* The Search component below will be removed */}
-        {/* 
-        <Search
+    <div className="p-2 md:p-4 lg:p-6">
+      {/* Search and Filters */}
+      <div className="mb-4 space-y-5">
+        <Input
           placeholder="Search announcements..."
-          prefix={<SearchOutlined />}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="mb-4"
-        /> 
-        */}
+          className="w-full"
+        />
         
-        <div className="flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-3">
           <Select
             defaultValue="all"
-            onChange={value => setSelectedCategory(value)}
-            className="min-w-[150px]"
+            onChange={setSelectedCategory}
+            className="w-full sm:w-1/2 lg:w-1/4"
           >
             <Option value="all">All Categories</Option>
             <Option value="Academic">Academic</Option>
-            <Option value="Sports">Sports</Option>
-            <Option value="Clubs">Clubs</Option>
+            <Option value="Events">Events</Option>
+            <Option value="General">General</Option>
           </Select>
 
           <Select
             defaultValue="all"
-            onChange={value => setSelectedPriority(value)}
-            className="min-w-[150px]"
+            onChange={setSelectedPriority}
+            className="w-full sm:w-1/2 lg:w-1/4"
           >
             <Option value="all">All Priorities</Option>
             <Option value="normal">Normal</Option>
@@ -84,32 +58,34 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Posts Grid */}
+      {/* Announcements Grid */}
       {filteredPosts.length === 0 ? (
-        <Empty
-          description="No announcements found"
-          className="mt-12"
-        />
+        <Empty description="No announcements found" className="mt-8" />
       ) : (
         <Row gutter={[16, 16]}>
           {filteredPosts.map(post => (
-            <Col key={post.id} xs={24} sm={12} lg={8} xl={6}>
+            <Col key={post.id} xs={24} sm={12} md={12} lg={8} xl={6}>
               <Card
-                title={post.title}
-                extra={
-                  <Tag color={post.priority === 'urgent' ? 'red' : 'blue'}>
-                    {post.priority}
-                  </Tag>
-                }
                 className="h-full shadow-sm hover:shadow-md transition-shadow"
+                bodyStyle={{ padding: '12px' }}
               >
-                <div className="mb-2">
-                  <Tag color="geekblue">{post.category}</Tag>
-                  <span className="text-gray-500 text-sm ml-2">
-                    {new Date(post.date).toLocaleDateString()}
-                  </span>
+                <div className="flex flex-col space-y-2">
+                  <div className="flex items-start justify-between gap-2">
+                    <h3 className="text-base font-medium line-clamp-1 flex-1">
+                      {post.title}
+                    </h3>
+                    <Tag color={post.priority === 'urgent' ? 'red' : 'blue'} className="flex-shrink-0">
+                      {post.priority}
+                    </Tag>
+                  </div>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <Tag color="geekblue">{post.category}</Tag>
+                    <span className="text-gray-500 text-sm">
+                      {new Date(post.date).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <p className="text-gray-700 line-clamp-3">{post.content}</p>
                 </div>
-                <p className="text-gray-700">{post.content}</p>
               </Card>
             </Col>
           ))}

@@ -38,7 +38,7 @@ const AppLayout = () => {
   return (
     <Layout className="min-h-screen">
       {/* Header */}
-      <Header className="bg-white shadow-sm fixed w-full z-10">
+      <Header style={{padding: '0px 10px'}} className="bg-white shadow-sm fixed w-full z-10">
         <div className="container mx-auto flex items-center justify-between h-16 px-4">
           {/* Logo */}
           <Link to="/" className="flex items-center">
@@ -67,6 +67,7 @@ const AppLayout = () => {
               icon={<MenuOutlined />}
               onClick={showDrawer}
               className="text-xl"
+              style={{ color: 'white' }}
             />
           )}
         </div>

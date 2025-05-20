@@ -13,7 +13,7 @@ import { auth, realtimeDb } from '../database/firebaseConfig';
 import { ref, get } from 'firebase/database';
 import { signOut } from 'firebase/auth';
 
-const { Header, Sider, Content } = Layout;
+const { Header, Content } = Layout;
 const { useBreakpoint } = Grid;
 const { Title } = Typography;
 
@@ -91,54 +91,63 @@ const AdminLayout = () => {
 
   return (
     <Layout className="min-h-screen">
-      {/* Desktop Sidebar */}
-      {!isMobile && (
-        <Sider
-          width={250}
-          className="bg-white shadow-md fixed left-0 h-full z-10"
-          theme="light"
-        >
-          <div className="p-4 h-16 flex items-center justify-center border-b">
-            <Title level={4} className="m-0 text-blue-600">
-              School Bulletin
-            </Title>
-          </div>
-          <Menu
-            mode="inline"
-            items={menuItems}
-            className="mt-2"
-          />
-        </Sider>
-      )}
+      <Header className="bg-white px-2 sm:px-4 md:px-6 flex items-center justify-between shadow-sm sticky top-0 z-50">
+        <div className="flex items-center gap-2 md:gap-4">
+          <Title level={4} className="m-0 text-blue-600 hidden sm:block">
+            School Bulletin
+          </Title>
+          <Title level={5} className="m-0 text-blue-600 sm:hidden">
+            SB
+          </Title>
+          
+          {!isMobile && (
+            <Menu
+              mode="horizontal"
+              items={menuItems}
+              className="border-0"
+              selectedKeys={[]}
+              style={{ color: 'white' }}
+            />
+          )}
+        </div>
 
-      <Layout className={!isMobile ? "ml-[250px]" : ""}>
-        <Header className="bg-white px-4 flex items-center justify-between shadow-sm">
-          {isMobile ? (
+        <div className="flex items-center gap-2 sm:gap-4">
+          {isMobile && (
             <Button
               type="text"
               icon={<MenuUnfoldOutlined />}
               onClick={() => setDrawerVisible(true)}
               className="text-lg"
+              style={{ color: 'white' }}
             />
-          ) : (
-            <div className="flex-1" /> // Spacer for desktop layout
           )}
           
-          <div className="flex items-center gap-2">
-            <Avatar 
-              size="default" 
-              src={adminData?.photoURL} 
-              className="bg-blue-500"
-            />
-            <span className="hidden md:inline">
-              {adminData?.displayName || adminData?.email || 'Admin'}
-            </span>
-          </div>
-        </Header>
+          <Avatar 
+            size={screens.xs ? "small" : "default"}
+            src={adminData?.photoURL} 
+            className="bg-blue-500"
+          />
+          <span className="hidden sm:inline text-sm md:text-base">
+            {adminData?.displayName || adminData?.email || 'Admin'}
+          </span>
+        </div>
+      </Header>
 
-        {/* Mobile Drawer */}
+      {/* Mobile Drawer */}
+      {isMobile && (
         <Drawer
-          title="Menu"
+          title={
+            <div className="flex items-center gap-2">
+              <Avatar 
+                size="small"
+                src={adminData?.photoURL} 
+                className="bg-blue-500"
+              />
+              <span className="text-sm">
+                {adminData?.displayName || adminData?.email || 'Admin'}
+              </span>
+            </div>
+          }
           placement="left"
           onClose={() => setDrawerVisible(false)}
           open={drawerVisible}
@@ -154,13 +163,16 @@ const AdminLayout = () => {
             mode="inline"
             items={menuItems}
             className="mt-2"
+            style={{ color: 'white' }}
           />
         </Drawer>
+      )}
 
-        <Content className="p-4 md:p-6 bg-gray-50">
+      <Content className="p-2 sm:p-4 md:p-6 bg-gray-50">
+        <div className="max-w-7xl mx-auto">
           <Outlet />
-        </Content>
-      </Layout>
+        </div>
+      </Content>
     </Layout>
   );
 };
