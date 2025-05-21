@@ -62,6 +62,8 @@ const Home = () => {
             defaultValue="all"
             onChange={setSelectedCategory}
             className="w-full sm:w-1/2 lg:w-1/4"
+            id="category-filter"
+            name="category-filter"
           >
             <Option value="all">All Categories</Option>
             <Option value="Academic">Academic</Option>
@@ -73,6 +75,8 @@ const Home = () => {
             defaultValue="all"
             onChange={setSelectedPriority}
             className="w-full sm:w-1/2 lg:w-1/4"
+            id="priority-filter"
+            name="priority-filter"
           >
             <Option value="all">All Priorities</Option>
             <Option value="normal">Normal</Option>
@@ -100,7 +104,9 @@ const Home = () => {
                   </div>
                 }
                 className="h-full shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-                bodyStyle={{ padding: '12px' }}
+                styles={{
+                  body: { padding: '12px' }
+                }}
                 onClick={() => setSelectedPost(post)}
               >
                 <div className="flex flex-col space-y-2">
