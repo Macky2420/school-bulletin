@@ -37,7 +37,8 @@ const AdminLayout = () => {
 
         const adminRef = ref(realtimeDb, `users/${adminId}`);
         const snapshot = await get(adminRef);
-        snapshot.exists() ? setAdminData(snapshot.val()) : navigate('/admin');
+        if (snapshot.exists()) setAdminData(snapshot.val());
+        else navigate('/admin');
       } catch (error) {
         console.error('Auth error:', error);
         navigate('/admin');
@@ -45,7 +46,6 @@ const AdminLayout = () => {
         setLoading(false);
       }
     };
-    
     checkAuth();
   }, [adminId, navigate]);
 
@@ -60,118 +60,75 @@ const AdminLayout = () => {
   };
 
   const menuItems = [
-    { 
-      key: 'dashboard', 
-      icon: <DashboardOutlined />, 
-      label: 'Dashboard',
-      onClick: () => navigate(`/admin/${adminId}/dashboard`)
-    },
-    { 
-      key: 'posts', 
-      icon: <FileOutlined />, 
-      label: 'Posts',
-      onClick: () => navigate(`/admin/${adminId}/posts`)
-    },
-    { 
-      key: 'settings', 
-      icon: <SettingOutlined />, 
-      label: 'Settings',
-      onClick: () => navigate(`/admin/${adminId}/settings`)
-    },
-    { 
-      key: 'logout', 
-      icon: <LogoutOutlined />, 
-      label: 'Logout',
-      onClick: handleLogout,
-      danger: true
-    }
+    { key: 'dashboard', icon: <DashboardOutlined />, label: 'Dashboard', onClick: () => navigate(`/admin/${adminId}/dashboard`) },
+    { key: 'posts',     icon: <FileOutlined />,      label: 'Posts',     onClick: () => navigate(`/admin/${adminId}/posts`) },
+    { key: 'settings',  icon: <SettingOutlined />,   label: 'Settings',  onClick: () => navigate(`/admin/${adminId}/settings`) },
+    { key: 'logout',    icon: <LogoutOutlined />,    label: 'Logout',    onClick: handleLogout, danger: true }
   ];
 
   if (loading) return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
 
   return (
     <Layout className="min-h-screen">
-      <Header className="bg-white px-2 sm:px-4 md:px-6 flex items-center justify-between shadow-sm sticky top-0 z-50">
-        <div className="flex items-center gap-2 md:gap-4">
-          <Title level={4} className="m-0 text-blue-600 hidden sm:block">
-            School Bulletin
-          </Title>
-          <Title level={5} className="m-0 text-blue-600 sm:hidden">
-            SB
-          </Title>
-          
-          {!isMobile && (
+      <Header className="bg-white px-4 shadow sticky top-0 z-50 h-16 relative flex items-center">
+        {/* Logo (left) */}
+        <div className="flex items-center gap-4">
+          <Title level={4} className="m-0 text-blue-600 hidden sm:block">School Bulletin</Title>
+          <Title level={5} className="m-0 text-blue-600 sm:hidden">SB</Title>
+        </div>
+
+        {/* Centered Menu (desktop only) */}
+        {!isMobile && (
+          <div className="absolute left-1/2 transform -translate-x-1/2">
             <Menu
               mode="horizontal"
               items={menuItems}
               className="border-0"
-              selectedKeys={[]}
-              style={{ color: 'white' }}
+              overflowedIndicator={null}
+              style={{ whiteSpace: 'nowrap', lineHeight: '64px' }}
             />
-          )}
-        </div>
+          </div>
+        )}
 
-        <div className="flex items-center gap-4">
+        {/* Avatar & Menu Button (right) */}
+        <div className="ml-auto flex items-center gap-4">
           {isMobile && (
             <Button
               type="text"
-              icon={<MenuUnfoldOutlined />}
-              onClick={() => setDrawerVisible(true)}
-              className="text-lg"
-              style={{ color: 'white' }}
+              icon={drawerVisible ? <MenuFoldOutlined /> : <MenuUnfoldOutlined />}
+              onClick={() => setDrawerVisible(prev => !prev)}
+              className="text-xl"
             />
           )}
-          
-          <Avatar 
-            size={screens.xs ? "small" : "default"}
-            src={adminData?.photoURL} 
-            className="bg-blue-500"
-          />
-          <span className="hidden sm:inline text-sm md:text-base">
-            {adminData?.displayName || adminData?.email || 'Admin'}
-          </span>
+          <Avatar size={screens.xs ? 'small' : 'default'} src={adminData?.photoURL} className="bg-blue-500" />
+          <span className="hidden sm:inline text-sm md:text-base">{adminData?.displayName || adminData?.email || 'Admin'}</span>
         </div>
       </Header>
 
       {/* Mobile Drawer */}
       {isMobile && (
         <Drawer
-          title={
+          title={(
             <div className="flex items-center gap-2">
-              <Avatar 
-                size="small"
-                src={adminData?.photoURL} 
-                className="bg-blue-500"
-              />
-              <span className="text-sm">
-                {adminData?.displayName || adminData?.email || 'Admin'}
-              </span>
+              <Avatar size="small" src={adminData?.photoURL} className="bg-blue-500" />
+              <span>{adminData?.displayName || adminData?.email || 'Admin'}</span>
             </div>
-          }
+          )}
           placement="left"
           onClose={() => setDrawerVisible(false)}
           open={drawerVisible}
-          width={250}
+          width={240}
           bodyStyle={{ padding: 0 }}
         >
-          <div className="p-4 h-16 flex items-center justify-center border-b">
-            <Title level={4} className="m-0 text-blue-600">
-              School Bulletin
-            </Title>
+          <div className="p-4 border-b">
+            <Title level={4} className="m-0 text-blue-600">School Bulletin</Title>
           </div>
-          <Menu
-            mode="inline"
-            items={menuItems}
-            className="mt-2"
-            style={{ color: 'white' }}
-          />
+          <Menu mode="inline" items={menuItems} selectedKeys={[]} style={{ borderRight: 0 }} />
         </Drawer>
       )}
 
-      <Content className="p-2 sm:p-4 md:p-6 bg-gray-50">
-        <div className="max-w-7xl mx-auto">
-          <Outlet />
-        </div>
+      <Content className="p-4 bg-gray-50">
+        <div className="max-w-7xl mx-auto"><Outlet /></div>
       </Content>
     </Layout>
   );
