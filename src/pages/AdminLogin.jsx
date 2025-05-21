@@ -238,14 +238,6 @@ const AdminLogin = () => {
                   </Button>
                 </Form.Item>
                 
-                <div className="text-center mt-4">
-                  <Link 
-                    to="/forgot-password" 
-                    className="text-blue-600 hover:text-blue-800 text-sm"
-                  >
-                    Forgot Password?
-                  </Link>
-                </div>
               </Form>
             </div>
           </Card>

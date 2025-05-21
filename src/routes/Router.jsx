@@ -1,10 +1,10 @@
 import { createBrowserRouter } from "react-router-dom"
 import Home from "../pages/Home"
 import Layout from "../layout/Layout"
-import PostDetails from "../pages/PostDetails"
 import AdminLogin from "../pages/AdminLogin"
 import AdminLayout from "../layout/AdminLayout"
 import AdminDashboard from "../pages/AdminDashboard"
+import Settings from "../pages/Settings"
 export const Router = createBrowserRouter([
     {
         path: "/",
@@ -13,16 +13,6 @@ export const Router = createBrowserRouter([
             {
                 path: "/",
                 element: <Home/>
-            }
-        ]
-    },
-    {
-        path: "/post/:id",
-        element: <Layout/>,
-        children: [
-            {
-                index: true,
-                element: <PostDetails/>
             }
         ]
     },
@@ -37,6 +27,26 @@ export const Router = createBrowserRouter([
             {
                 index: true,
                 element: <AdminDashboard/>
+            }
+        ]
+    },
+    {
+        path: "/home/:adminId",
+        element: <AdminLayout/>,
+        children: [
+            {
+                index: true,
+                element: <Home/>
+            }
+        ]
+    },
+    {
+        path: "/setting/:adminId",
+        element: <AdminLayout/>,
+        children: [
+            {
+                index: true,
+                element: <Settings/>
             }
         ]
     }

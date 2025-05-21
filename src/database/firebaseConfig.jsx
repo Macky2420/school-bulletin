@@ -4,11 +4,14 @@ import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getDatabase } from "firebase/database";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Cloudinary Configuration (directly in the file)
+const cloudinaryConfig = {
+  cloudName: "dvr3kabnv",
+  uploadPreset: "quicknote"
+};
 
 // Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyBQETiMI1oA83sYko7KfjUsDAPiAhcVLvk",
   authDomain: "school-bulletin-91ead.firebaseapp.com",
@@ -24,7 +27,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 let analytics = null;
 
-// Only initialize analytics in browser environment
+// Initialize analytics only in browser environment
 if (typeof window !== 'undefined') {
   try {
     analytics = getAnalytics(app);
@@ -37,4 +40,34 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const realtimeDb = getDatabase(app);
 
-export { app, analytics, auth, db, realtimeDb }; 
+// Cloudinary Upload Function
+const uploadToCloudinary = async (file) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', cloudinaryConfig.uploadPreset);
+  formData.append('cloud_name', cloudinaryConfig.cloudName);
+
+  try {
+    const response = await fetch(
+      `https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/image/upload`,
+      {
+        method: 'POST',
+        body: formData,
+      }
+    );
+    const data = await response.json();
+    return data.secure_url;
+  } catch (error) {
+    console.error('Cloudinary upload error:', error);
+    throw new Error('Image upload failed');
+  }
+};
+
+export { 
+  app, 
+  analytics, 
+  auth, 
+  db, 
+  realtimeDb,
+  uploadToCloudinary 
+};
