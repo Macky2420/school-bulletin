@@ -49,10 +49,6 @@ const AppLayout = () => {
 
           {isDesktop ? (
             <div className="flex items-center gap-4">
-              <Input.Search
-                placeholder="Search announcements..."
-                className="w-full md:w-80 lg:w-96"
-              />
               <Button 
                 type="primary" 
                 icon={<PlusOutlined />} 
@@ -68,6 +64,7 @@ const AppLayout = () => {
               icon={<MenuOutlined />}
               onClick={showDrawer}
               className="text-xl text-gray-800"
+              style={{color: "white"}}
             />
           )}
         </div>
@@ -82,11 +79,6 @@ const AppLayout = () => {
           width={300}
         >
           <Space direction="vertical" className="w-full" size="middle">
-            <Input.Search
-              placeholder="Search announcements..."
-              enterButton="Search"
-              prefix={<SearchOutlined />}
-            />
             <Button
               type="primary"
               icon={<PlusOutlined />}
