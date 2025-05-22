@@ -50,7 +50,7 @@ const AdminLogin = () => {
       }
 
       // For production deployments: allow all authenticated users
-      if (process.env.NODE_ENV === 'deployment') {
+      if (import.meta.env.VITE_MODE === 'deployment') {
         messageApi.warning('Deployment mode: skipping admin verification.');
         console.log('Deployment admin login');
         localStorage.setItem('adminId', user.uid);
