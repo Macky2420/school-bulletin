@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    { "source": "/admin/:match*", "destination": "/" },
+    { "source": "/home/:match*", "destination": "/" },
+    { "source": "/setting/:match*", "destination": "/" },
+    { "source": "/:match*", "destination": "/" }
+  ]
+}
