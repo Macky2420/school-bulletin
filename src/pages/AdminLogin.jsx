@@ -15,7 +15,6 @@ const AdminLogin = () => {
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
 
-  // Attempt login, return user object on success or null on failure
   const loginWithFirebase = async (email, password) => {
     try {
       const { user } = await signInWithEmailAndPassword(auth, email, password);
@@ -40,25 +39,6 @@ const AdminLogin = () => {
     setLoading(false);
 
     if (user) {
-      // For development: Skip admin check if using a test account
-      if (process.env.NODE_ENV === 'development' && email.includes('test')) {
-        messageApi.success('Development login successful!');
-        console.log('Development admin login');
-        localStorage.setItem('adminId', user.uid);
-        navigate(`/admin/${user.uid}`, { replace: true });
-        return;
-      }
-
-      // For production deployments: allow all authenticated users
-      if (import.meta.env.VITE_MODE === 'deployment') {
-        messageApi.warning('Deployment mode: skipping admin verification.');
-        console.log('Deployment admin login');
-        localStorage.setItem('adminId', user.uid);
-        navigate(`/admin/${user.uid}`, { replace: true });
-        return;
-      }
-
-      // Normal login flow
       messageApi.success('Login successful!');
       navigate(`/admin/${user.uid}`, { replace: true });
     }
